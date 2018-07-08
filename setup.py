@@ -12,6 +12,7 @@ Python实现的 coinmarketcap.com APIs封装，同时提供了更多私有API实
 
 Python wrapper for coinmarketcap.com public API and private API
 offer global market data,coin data,exchanges data and more
+
 Documentation
 =============
 https://github.com/shyuntech/coinmarketcap-api
