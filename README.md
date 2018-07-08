@@ -1,13 +1,12 @@
 # coinmarketcap-api
 
-
-####intro
+## Intro
 
 Python wrapper for coinmarketcap.com public API and private API
 offer global market data,coin data,exchanges data and more
 this library has been tested with Python2.7 and Python3.6
 
-##Install
+## Install
 
 From source use
 
@@ -17,7 +16,7 @@ or install from PyPi
 
     $ pip install coinmarketcap-api
     
-##Usage
+## Usage
 
 #### 1. global market state
 - **`Implement`** - Use coinmarketcap.com public API /v2/global/
@@ -27,7 +26,7 @@ or install from PyPi
     Valid fiat currency values are: “AUD”, “BRL”, “CAD”, “CHF”, “CLP”, “CNY”, “CZK”, “DKK”, “EUR”, “GBP”, “HKD”, “HUF”, “IDR”, “ILS”, “INR”, “JPY”, “KRW”, “MXN”, “MYR”, “NOK”, “NZD”, “PHP”, “PKR”, “PLN”, “RUB”, “SEK”, “SGD”, “THB”, “TRY”, “TWD”, “ZAR”
     Valid cryptocurrency values are: “BTC”, “ETH” “XRP”, “LTC”, and “BCH”
 
-#####example
+##### example
 ```python
 from coinmarketcap import CoinMarketCap
 market = CoinMarketCap()
@@ -62,7 +61,7 @@ resp = market.stats(convert="BTC")
 - **`Description`** - This endpoint displays all active cryptocurrency listings in one call. Use the "id" field on 
         the Ticker endpoint to query more information on a specific cryptocurrency.
 
-#####example
+##### example
 ```python
 from coinmarketcap import CoinMarketCap
 market = CoinMarketCap()
@@ -105,7 +104,7 @@ resp = market.coin_list()
     Valid fiat currency values are: "AUD", "BRL", "CAD", "CHF", "CLP", "CNY", "CZK", "DKK", "EUR", "GBP", "HKD", "HUF", "IDR", "ILS", "INR", "JPY", "KRW", "MXN", "MYR", "NOK", "NZD", "PHP", "PKR", "PLN", "RUB", "SEK", "SGD", "THB", "TRY", "TWD", "ZAR" 
     Valid cryptocurrency values are: "BTC", "ETH" "XRP", "LTC", and "BCH"
 
-#####example
+##### example
 ```python
 from coinmarketcap import CoinMarketCap
 market = CoinMarketCap()
@@ -164,7 +163,7 @@ resp = market.coin_ticker_detail(1, convert="CNY", disable_cache=False)
     Valid fiat currency values are: "AUD", "BRL", "CAD", "CHF", "CLP", "CNY", "CZK", "DKK", "EUR", "GBP", "HKD", "HUF", "IDR", "ILS", "INR", "JPY", "KRW", "MXN", "MYR", "NOK", "NZD", "PHP", "PKR", "PLN", "RUB", "SEK", "SGD", "THB", "TRY", "TWD", "ZAR" 
     Valid cryptocurrency values are: "BTC", "ETH" "XRP", "LTC", and "BCH"
 
-#####example
+##### example
 ```python
 from coinmarketcap import CoinMarketCap
 market = CoinMarketCap()
@@ -248,7 +247,7 @@ resp = market.coin_ticker_list(convert="CNY", start=1, limit=2, disable_cache=Fa
     - **(int) end** - return results ending with the specified timestamp
     Note: You should set start and end both or both not
     
-#####example
+##### example
 ```python
 from coinmarketcap import CoinMarketCap
 market = CoinMarketCap()
@@ -283,7 +282,7 @@ resp = market.coin_price("eos")
 - **`Implement`** - gather coin market price from web page https://coinmarketcap.com/currencies/`currency`/#markets
 - **`Description`** - This endpoint return currency market price info 
 
-#####example
+##### example
 ```python
 from coinmarketcap import CoinMarketCap
 market = CoinMarketCap()
@@ -328,7 +327,7 @@ resp = market.coin_market_price("eos")
 #### 6. exchange list
 - **`Implement`** - gather exchanges list from web page https://coinmarketcap.com/exchanges/volume/24-hour/all/
 - **`Description`** - This endpoint displays all active exchange listings in one call. 
-#####example
+##### example
 ```python
 from coinmarketcap import CoinMarketCap
 market = CoinMarketCap()
