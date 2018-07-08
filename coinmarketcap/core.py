@@ -16,10 +16,10 @@ class CoinMarketCap(object):
     __CMC_API_URL = u'https://api.coinmarketcap.com/v2/'
     __CMC_HISTORY_API_URL = u'https://graphs2.coinmarketcap.com/'
     __CMC_BASE_URL = u'https://coinmarketcap.com/'
-    __DEFAULT_REQUEST_TIMEOUT = 30
+    __DEFAULT_REQUEST_TIMEOUT = 60  # seconds
     __DEFAULT_ENABLE_CACHE = True
     __DEFAULT_CACHE_FILENAME = u'coinmarketcap.cache'
-    __DEFAULT_CACHE_EXPIRE_AFTER = 30
+    __DEFAULT_CACHE_EXPIRE_AFTER = 60  # seconds
 
     def __init__(self, enable_cache=__DEFAULT_ENABLE_CACHE, request_timeout=__DEFAULT_REQUEST_TIMEOUT,
                  cache_expire_after=__DEFAULT_CACHE_EXPIRE_AFTER, cache_filename=__DEFAULT_CACHE_FILENAME):
@@ -56,13 +56,19 @@ class CoinMarketCap(object):
         response = self.client.request(self.__CMC_API_URL, u'listings/', params=None, disable_cache=disable_cache)
         return response
 
-    def coin_detail(self, currency, disable_cache=False, **kwargs):
+    def coin_ticker_list(self, disable_cache=False, **kwargs):
+        print(kwargs)
+        print(disable_cache)
+        return self.coin_ticker_detail(currency="", disable_cache=disable_cache, **kwargs)
+
+    def coin_ticker_detail(self, currency, disable_cache=False, **kwargs):
         """
         This endpoint displays cryptocurrency ticker data in order of rank. The maximum 
         number of results per call is 100. Pagination is possible by using the start 
         and limit parameters.
         
         GET /ticker/
+        GET /ticker/<coin id>
         
         Optional parameters:
             (int) start - return results starting from the specified number (default is 1)
@@ -81,7 +87,6 @@ class CoinMarketCap(object):
         """
         params = {}
         params.update(kwargs)
-
         # see https://github.com/barnumbirr/coinmarketcap/pull/28
         if currency:
             currency = str(currency) + u'/'
@@ -91,9 +96,9 @@ class CoinMarketCap(object):
 
     def coin_price(self, currency, start=None, end=None, disable_cache=False):
         """
-        获得货币的价格
+        get currency price info from <start> to <end>
         
-        GET /currencies/<currency>/<start>/<end>
+        GET /currencies/<currency>/<start>/<end>/
         GET /currencies/<currency>/
         
         Optional parameters:
@@ -102,8 +107,8 @@ class CoinMarketCap(object):
             
         :param currency: 货币名称 必须是字符串
         :param disable_cache: 禁用缓存
-        :param start: 
-        :param end: 
+        :param start: 开始时间timestamp
+        :param end: 结束时间timestamp
         :return: 
         """
         if all((start, end)):
@@ -114,12 +119,12 @@ class CoinMarketCap(object):
 
         return response
 
-    def coin_market_price(self, currency, disable_cache=True):
+    def coin_market_price(self, currency, disable_cache=False):
         """
         https://coinmarketcap.com/currencies/<currency>/#markets
         
-        :param currency: 
-        :param disable_cache: 
+        :param currency: 虚拟货币的名称 eg：bitcoin
+        :param disable_cache: 禁用缓存默认为
         :return: 
         """
         endpoint = u'currencies/{}/#markets'.format(currency)
@@ -128,20 +133,25 @@ class CoinMarketCap(object):
         soup = bs(response, u'html.parser')
         table_body = soup.find(u'table', {u'id': u'markets-table'}).find(u'tbody')
         rows = table_body.find_all(u'tr')
+        items = []
         for row in rows:
             tds = row.find_all(u'td')
-            data = {
+            item = {
                 u'exchange': tds[1][u'data-sort'],
                 u'pair': tds[2][u'data-sort'],
-                u'volume': utils._get_volume(tds[3]),
-                u'price': utils._get_price(tds[4]),
+                u'volume': utils.get_volume(tds[3]),
+                u'price': utils.get_price(tds[4]),
                 u'percentage': tds[5][u'data-sort']
             }
-        return response
-
-    def coin_ico_info(self):
-        # TODO
-        pass
+            items.append(item)
+        resp = {
+            u'data': items,
+            u"metadata": {
+                u"num_prices": len(items),
+                u"error": None
+            }
+        }
+        return resp
 
     def exchange_list(self, disable_cache=False):
         """
@@ -150,8 +160,8 @@ class CoinMarketCap(object):
         
         GET /exchanges/volume/24-hour/all/
         
-        :param disable_cache:  是否启用缓存
-        :return: json
+        :param disable_cache:  禁用缓存
+        :return: 
         """
         endpoint = u'exchanges/volume/24-hour/all/'
         response = self.client.raw_request(self.__CMC_BASE_URL, endpoint, None, disable_cache)
@@ -162,7 +172,7 @@ class CoinMarketCap(object):
         for idx, row in enumerate(rows, start=1):
             item = {
                 u'display_name': row.find(u'a', {u'class': u'link-secondary'}).get_text(),
-                u'name': utils._get_name_form_url(row.find(u'a', {u'class': u'link-secondary'})[u'href']),
+                u'name': utils.get_name_form_url(row.find(u'a', {u'class': u'link-secondary'})[u'href']),
                 u'url': row.find(u'a', {u'class': u'link-secondary'})[u'href'],
                 u'logo': row.find(u'img', {u'class': u'logo-32x32'})[u'src'],
                 u'rank': idx,
@@ -178,5 +188,5 @@ class CoinMarketCap(object):
         return resp
 
     def exchange_detail(self):
-        # TODO
+        # TODO gather exchange info from webpage
         pass

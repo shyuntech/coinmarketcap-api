@@ -3,11 +3,11 @@
 import re
 
 
-def _get_name_form_url(url):
+def get_name_form_url(url):
     return re.match(r'/exchanges/(.*)/', url).group(1)
 
 
-def _get_price(td):
+def get_price(td):
     try:
         price_span = td.find(u"span", {u"class": u"price"})
         price = {
@@ -20,7 +20,7 @@ def _get_price(td):
         return None
 
 
-def _get_volume(td):
+def get_volume(td):
     try:
         price_span = td.find(u"span", {u'class': u'volume'})
         volume = {

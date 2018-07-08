@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from setuptools import setup, find_packages
 
-version = '0.0.1'
+version = '0.0.2'
 
 LONG_DESCRIPTION = """
 =====================================
@@ -37,7 +37,7 @@ setup(
     keywords=['cryptocurrency', 'API', 'coinmarketcap'],
     author='hu chi',
     author_email='hu.chi@qq.com',
-    url='http://github.com/shuyun/coinmarketcap-api',
+    url='https://github.com/shyuntech/coinmarketcap-api',
     license='Apache v2.0 License',
     packages=find_packages(),
     include_package_data=True,
